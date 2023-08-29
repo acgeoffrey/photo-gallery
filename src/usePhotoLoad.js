@@ -9,6 +9,7 @@ export default function usePhotoLoad(page) {
 
   useEffect(
     function () {
+      console.log('RENDERING');
       setIsLoading(true);
       setError(false);
 
@@ -17,12 +18,13 @@ export default function usePhotoLoad(page) {
       })
         .then((res) => res.json())
         .then((data) => {
-          setData((prevData) => [...prevData, data]);
+          // console.log(data);
+          setData((prevData) => [...new Set([...prevData, ...data])]);
         })
         .catch(() => setError(true));
     },
     [page]
   );
 
-  return { data, isLoading, error };
+  return { data, isLoading, error, setData };
 }
