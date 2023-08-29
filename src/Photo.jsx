@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-function Photo({ photo, setData }) {
+function Photo({ photo }) {
   const [likes, setLikes] = useState(0);
 
   function handleLikes() {
@@ -19,9 +19,17 @@ function Photo({ photo, setData }) {
         src={photo.download_url}
         style={{ height: '10rem', width: '15rem' }}
       />
-      <h3>Author:</h3>
-      <p>{photo.author}</p>
-      <div style={{ padding: '1rem' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+        <h3>Author:</h3>
+        <p>{photo.author}</p>
+      </div>
+      <div
+        style={{
+          padding: '0.5rem',
+          backgroundColor: 'rgba(135, 207, 235, 0.251)',
+          borderRadius: '5px',
+        }}
+      >
         <i
           className='fa-regular fa-thumbs-up'
           style={{

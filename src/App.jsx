@@ -1,11 +1,26 @@
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import usePhotoLoad from './usePhotoLoad';
 import Photo from './Photo';
 
 function App() {
   const [page, setPage] = useState(1);
 
-  const { data, error, isLoading, setData } = usePhotoLoad(page);
+  const { data, error, isLoading, isNext } = usePhotoLoad(page);
+
+  const ref = useRef();
+  const lastPhotoRef = useCallback(
+    (node) => {
+      if (isLoading) return;
+      if (ref.current) ref.current.disconnect();
+      ref.current = new IntersectionObserver((entries) => {
+        if (entries[0].isIntersecting && isNext) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      });
+      if (node) ref.current.observe(node);
+    },
+    [isLoading, isNext]
+  );
 
   return (
     <div style={{ padding: '2rem', width: '100vw' }}>
@@ -20,10 +35,24 @@ function App() {
         }}
       >
         {data.length > 0 &&
-          data.map((item) => {
-            return <Photo photo={item} setData={setData} key={item.id} />;
+          !error &&
+          data.map((item, index) => {
+            if (data.length === index + 1) {
+              return (
+                <div key={item.id} ref={lastPhotoRef}>
+                  <Photo photo={item} />
+                </div>
+              );
+            } else {
+              return (
+                <div key={item.id}>
+                  <Photo photo={item} />
+                </div>
+              );
+            }
           })}
       </div>
+      {isLoading && <p>Loading...</p>}
     </div>
   );
 }

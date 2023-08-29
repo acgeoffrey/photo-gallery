@@ -6,6 +6,7 @@ export default function usePhotoLoad(page) {
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(false);
+  const [isNext, setIsNext] = useState(true);
 
   useEffect(
     function () {
@@ -19,12 +20,14 @@ export default function usePhotoLoad(page) {
         .then((res) => res.json())
         .then((data) => {
           // console.log(data);
-          setData((prevData) => [...new Set([...prevData, ...data])]);
+          setIsNext(data.length > 0);
+          setData((prevData) => [...prevData, ...data]);
+          setIsLoading(false);
         })
         .catch(() => setError(true));
     },
     [page]
   );
 
-  return { data, isLoading, error, setData };
+  return { data, isLoading, error, setData, isNext };
 }
