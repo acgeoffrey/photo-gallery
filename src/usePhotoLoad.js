@@ -10,7 +10,7 @@ export default function usePhotoLoad(page) {
 
   useEffect(
     function () {
-      console.log('RENDERING');
+      // console.log('RENDERING');
       setIsLoading(true);
       setError(false);
 
